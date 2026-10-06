@@ -13,7 +13,7 @@ using LinearAlgebra
 using SparseArrays
 using ArgMacros
 
-CONFIG_FILE_PATH = "CHS.config"
+CONFIG_FILE_PATH = "/home/trung/OverlapToolkit/CHS.config"
 AVAILABLE_PIN_TYPES = ["4pins","4pins_positive","4pins_positive_displaced",
                 "north","positive_north","positive_samesign","same_sign"]
 
@@ -51,7 +51,7 @@ function fileconfigure(filename,ask_confirm=true)
         end
     else
         println("File '$(filename)' not found.")
-        println("The script was NOT configured.")
+        println("The script was NOT configure")
     end
 end
 
@@ -81,6 +81,11 @@ function main()
     if configure_default
         fileconfigure("CHS.config",false)
         return
+    end
+
+    if !@isdefined(JACKS_DIR)
+        println("Location of jack polynomials cannot be found. Please check configuration file.")
+        println("Terminating.")
     end
 
     # Read wavefunction
@@ -236,11 +241,8 @@ function main()
     end
 end
 
-
 if isfile(CONFIG_FILE_PATH)
-        include(CONFIG_FILE_PATH)
-        @time main()
-    else
-        println("Config file not found, so the locations where the jacks are stored cannot be found.")
-        println("Terminating.")
-    end
+    include(CONFIG_FILE_PATH)
+end
+
+@time main()
